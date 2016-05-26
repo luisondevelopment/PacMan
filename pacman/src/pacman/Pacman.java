@@ -15,7 +15,8 @@ public class Pacman extends JFrame {
         add(new pac());
         setTitle("http://javayotros.blogspot.com/");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(380, 420);
+        //setSize(380, 420);
+        setSize(500, 500);
         setLocationRelativeTo(null);
         setVisible(true);        
     }
