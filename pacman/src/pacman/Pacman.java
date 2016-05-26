@@ -4,7 +4,7 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 
 public class Pacman extends JFrame {
-
+//comentario teste
     public Pacman() {
         
         initUI();
