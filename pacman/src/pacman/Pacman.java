@@ -4,19 +4,17 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 
 public class Pacman extends JFrame {
-//TESTE ECLIPSE ADENILSON
+
     public Pacman() {
         
         initUI();
-    }
-    
+    }    
     private void initUI() {
         
         add(new pac());
-        setTitle("http://javayotros.blogspot.com/");
+        setTitle("PAC MAN MAROTO");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        //setSize(380, 420);
-        setSize(500, 500);
+        setSize(380, 420); 
         setLocationRelativeTo(null);
         setVisible(true);        
     }

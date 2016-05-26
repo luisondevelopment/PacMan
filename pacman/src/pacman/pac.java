@@ -152,7 +152,7 @@ package pacman;
 	        g2d.setColor(Color.white);
 	        g2d.drawRect(50, scrsize / 2 - 30, scrsize - 100, 50);
 
-	        String s = "Presiona s para empezar.";
+	        String s = "Pressione S para começar.";
 	        Font small = new Font("Helvetica", Font.BOLD, 15);
 	        FontMetrics metr = this.getFontMetrics(small);
 
@@ -168,7 +168,7 @@ package pacman;
 
 	        g.setFont(smallfont);
 	        g.setColor(new Color(96, 128, 255));
-	        s = "Score: " + score;
+	        s = "Pontos: " + score;
 	        g.drawString(s, scrsize / 2 + 96, scrsize + 16);
 
 	        for (i = 0; i < pacsleft; i++) {

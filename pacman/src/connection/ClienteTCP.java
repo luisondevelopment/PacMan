@@ -15,7 +15,7 @@ public class ClienteTCP {
 	 public static void main(String[] args)  throws UnknownHostException, IOException 
 	 {
 		 
-		 Socket cliente = new Socket("192.168.0.101",12345);
+		 Socket cliente = new Socket("192.168.0.103",12345);
 	     System.out.println("O cliente se conectou ao servidor!");
 	     
 	     Scanner teclado = new Scanner(System.in);
