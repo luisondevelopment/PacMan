@@ -4,15 +4,17 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 public class Client implements Runnable 
 {
-	private Socket server;
+	private Socket cliente;
 	private String line,input;
 
-    Client(Socket server) 
+    Client(int port) throws UnknownHostException, IOException 
     {
-    	this.server = server;
+    	//this.cliente = cliente;
+    	Socket cliente = new Socket("192.168.0.101",port);
 	}
 
     @SuppressWarnings("deprecation")
@@ -23,8 +25,8 @@ public class Client implements Runnable
     	try 
     	{
     		// Get input from the client
-	        DataInputStream in = new DataInputStream (server.getInputStream());
-	        PrintStream out = new PrintStream(server.getOutputStream());
+	        DataInputStream in = new DataInputStream (cliente.getInputStream());
+	        PrintStream out = new PrintStream(cliente.getOutputStream());
 
 	        while((line = in.readLine()) != null && !line.equals(".")) 
 	        {
@@ -37,7 +39,7 @@ public class Client implements Runnable
 	        System.out.println("Overall message is:" + input);
 	        out.println("Overall message is:" + input);
 
-	        server.close();
+	        cliente.close();
 	    } 
     	catch (IOException ioe) 
     	{

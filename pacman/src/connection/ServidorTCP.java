@@ -22,16 +22,16 @@ public class ServidorTCP
 
 	    try
 	    {
-	    	ServerSocket listener = new ServerSocket(port);
-	    	Socket server;
-
+	    	ServerSocket server = new ServerSocket(port);
+	    	System.out.println(port + " Opened");
+    		Socket cliente;
+    		String ip = server.getInetAddress().getHostAddress().toString();
+    		
 	    	while((i++ < maxConnections) || (maxConnections == 0))
 	    	{
-	    		Client connection = null;
-	    		connection.run();
-	    		server = listener.accept();
-	    		Client conn_c= new Client(server);
-	    		Thread t = new Thread(conn_c);
+	    		Client connection= new Client(port);
+	    		cliente = server.accept();
+	    		Thread t = new Thread(connection);
 	    		t.start();
 	    	}
 	    } 
