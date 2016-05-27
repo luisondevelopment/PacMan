@@ -2,6 +2,7 @@ package connection;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -12,20 +13,22 @@ import javax.swing.JOptionPane;
 
 public class ClienteTCP {
 	
-	 public static void main(String[] args)  throws UnknownHostException, IOException 
-	 {
-		 
-		 Socket cliente = new Socket("192.168.0.101",12345);
-	     System.out.println("O cliente se conectou ao servidor!");
+	
+	public static void main(String[] args)  throws UnknownHostException, IOException 
+	{
+		String message;
+		Socket cliente = new Socket("192.168.0.101",12345);
+		System.out.println("O cliente se conectou ao servidor!");
 	     
-	     Scanner teclado = new Scanner(System.in);
-	     PrintStream saida = new PrintStream(cliente.getOutputStream());
+		Scanner teclado = new Scanner(System.in);
+		ObjectOutputStream saida = new ObjectOutputStream(cliente.getOutputStream()); 
 	     
-	     while (teclado.hasNextLine()) 
-	     {
-	    	 saida.flush();
-	    	 saida.println(teclado.nextLine());
-	    	 saida.flush();
+		while (teclado.hasNextLine()) 
+		{
+			message = teclado.nextLine();
+			saida.flush();
+	    	saida.writeObject(message);
+	    	saida.flush();
 	     }
 	     
 	     saida.close();
