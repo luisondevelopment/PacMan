@@ -27,7 +27,8 @@ public class ServidorTCP
 
 	    	while((i++ < maxConnections) || (maxConnections == 0))
 	    	{
-	    		Client connection;
+	    		Client connection = null;
+	    		connection.run();
 	    		server = listener.accept();
 	    		Client conn_c= new Client(server);
 	    		Thread t = new Thread(conn_c);
