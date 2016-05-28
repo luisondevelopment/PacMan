@@ -29,7 +29,7 @@ public class ServidorTCP
     		
 	    	while((i++ < maxConnections) || (maxConnections == 0))
 	    	{
-	    		Client connection= new Client(port);
+	    		Client connection= new Client();
 	    		cliente = server.accept();
 	    		Thread t = new Thread(connection);
 	    		t.start();

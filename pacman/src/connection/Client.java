@@ -8,13 +8,13 @@ import java.net.UnknownHostException;
 
 public class Client implements Runnable 
 {
-	private Socket cliente;
+	private Socket cliente = new Socket("192.168.0.102",4444);
 	private String line,input;
 
-    Client(int port) throws UnknownHostException, IOException 
+    Client() throws UnknownHostException, IOException 
     {
     	//this.cliente = cliente;
-    	Socket cliente = new Socket("192.168.0.101",port);
+    	//Socket cliente = new Socket("192.168.0.101",port);
 	}
 
     @SuppressWarnings("deprecation")
