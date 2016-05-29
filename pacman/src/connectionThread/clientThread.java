@@ -16,8 +16,8 @@ import java.net.Socket;
 class clientThread extends Thread 
 {
 
-	private DataInputStream is = null;
-	private PrintStream os = null;
+	private DataInputStream dataInputStream = null;
+	private PrintStream printStream = null;
 	private Socket clientSocket = null;
 	private final clientThread[] threads;
 	private int maxClientsCount;
@@ -37,23 +37,23 @@ class clientThread extends Thread
 		try 
 		{
 			 //Create input and output streams for this client.
-			is = new DataInputStream(clientSocket.getInputStream());
-			os = new PrintStream(clientSocket.getOutputStream());
-			os.println("Enter your name.");
-			String name = is.readLine().trim();
-				os.println("Hello " + name + " to our chat room.\nTo leave enter /quit in a new line");
+			dataInputStream = new DataInputStream(clientSocket.getInputStream());
+			printStream = new PrintStream(clientSocket.getOutputStream());
+			printStream.println("Enter your name.");
+			String name = dataInputStream.readLine().trim();
+			printStream.println("Hello " + name + " to our chat room.\nTo leave enter /quit in a new line");
 		  
 			for (int i = 0; i < maxClientsCount; i++) 
 		  	{
 			  	if (threads[i] != null && threads[i] != this) 
 			  	{
-			  		threads[i].os.println("clientThread: A new user " + name + " entered the chat room");
+			  		threads[i].printStream.println("clientThread: A new user " + name + " entered the chat room");
 			  	}
 		  	}
 		  	
 			while (true) 
 		  	{
-		  		String line = is.readLine();
+		  		String line = dataInputStream.readLine();
 		  		if (line.startsWith("/quit")) 
 		  		{
 		  			break;
@@ -62,18 +62,19 @@ class clientThread extends Thread
 		  		{
 		  			if (threads[i] != null) 
 		  			{
-		  				threads[i].os.println("<" + name + "&gr; " + line);
+		  				threads[i].printStream.println("<" + name + "says: " + line);
 		  			}
 		  		}
 		  	}
-		  	for (int i = 0; i < maxClientsCount; i++) 
+		  	
+			for (int i = 0; i < maxClientsCount; i++) 
 		  	{
 		  		if (threads[i] != null && threads[i] != this) 
 		  		{
-		  			threads[i].os.println("*** The user " + name + " is leaving the chat room !!! ***");
+		  			threads[i].printStream.println("The user " + name + " is leaving the chat room");
 		  		}
 		  	}
-		  	os.println("*** Bye " + name + " ***");
+			printStream.println("Bye " + name);
 
 		  	/*
 		  	 * Clean up. Set the current thread variable to null so that a new client
@@ -90,8 +91,8 @@ class clientThread extends Thread
 		  	/*
 		  	 * Close the output stream, close the input stream, close the socket.
 		  	 */
-		  	is.close();
-		  	os.close();
+		  	dataInputStream.close();
+		  	printStream.close();
 		  	clientSocket.close();
 		} 
 		catch (IOException e) 

@@ -13,13 +13,20 @@ package pacman;
 	import java.awt.event.ActionListener;
 	import java.awt.event.KeyAdapter;
 	import java.awt.event.KeyEvent;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.*;
 
-	import javax.swing.ImageIcon;
+import javax.swing.ImageIcon;
 	import javax.swing.JPanel;
 	import javax.swing.Timer;
+	
+	import last.connenction.*;
 
-	public class pac extends JPanel implements ActionListener {
-
+	public class pac extends JPanel implements ActionListener 
+	{
+		
 	    private Dimension d;
 	    private final Font smallfont = new Font("Helvetica", Font.BOLD, 14);
 
@@ -33,7 +40,7 @@ package pacman;
 	    private final int blocksize = 24;
 	    private final int nrofblocks = 15;
 	    private final int scrsize = nrofblocks * blocksize;
-	    private final int pacanimdelay = 2;
+	    private final int pacanimdelay = 0;
 	    private final int pacmananimcount = 4;
 	    private final int maxghosts = 12;
 	    private final int pacmanspeed = 6;
@@ -79,8 +86,8 @@ package pacman;
 	    private short[] screendata;
 	    private Timer timer;
 
-	    public pac() {
-
+	    public pac() 
+	    {
 	        loadImages();
 	        initVariables();
 
@@ -91,7 +98,8 @@ package pacman;
 	        setBackground(Color.BLACK);
 	        setDoubleBuffered(true);
 	    }
-
+	    
+	    
 	    private void initVariables() {
 
 	        screendata = new short[nrofblocks * nrofblocks];
@@ -175,6 +183,18 @@ package pacman;
 	            g.drawImage(pacman3left, i * 28 + 8, scrsize + 1, this);
 	        }
 	    }
+	    
+	    private void drawNumberClients(Graphics2D g) {
+
+	        int i;
+	        String s;
+
+	        g.setFont(smallfont);
+	        g.setColor(new Color(96, 128, 255));
+	        s = "Clientes: ";
+	        g.drawString(s, scrsize / 2 - 40, scrsize + 16);
+	        
+	    }
 
 	    private void checkMaze() {
 
@@ -206,7 +226,7 @@ package pacman;
 	        }
 	    }
 
-	    private void death() {//murio
+	    private void death() {
 
 	        pacsleft--;
 
@@ -217,7 +237,7 @@ package pacman;
 	        continueLevel();
 	    }
 
-	    private void moveGhosts(Graphics2D g2d) {//mover fantasmas
+	    private void moveGhosts(Graphics2D g2d) {
 
 	        short i;
 	        int pos;
@@ -544,7 +564,7 @@ package pacman;
 	        doDrawing(g);
 	    }
 
-	    private void doDrawing(Graphics g) {
+	    public void doDrawing(Graphics g) {
 
 	        Graphics2D g2d = (Graphics2D) g;
 
@@ -553,6 +573,7 @@ package pacman;
 
 	        drawMaze(g2d);
 	        drawScore(g2d);
+	        drawNumberClients(g2d);
 	        doAnim();
 
 	        if (ingame) {

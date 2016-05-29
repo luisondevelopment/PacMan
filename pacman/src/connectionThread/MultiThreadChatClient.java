@@ -65,20 +65,19 @@ public class MultiThreadChatClient implements Runnable
 	    {
 	    	try 
 	    	{
-
 	    		/* Create a thread to read from the server. */
 	    		new Thread(new MultiThreadChatClient()).start();
 	    		while (!closed) 
 	    		{
 	    			os.println(inputLine.readLine().trim());
 	    		}
-	        /*
-	         * Close the output stream, close the input stream, close the socket.
-	         */
+	    		/*
+	    		 * Close the output stream, close the input stream, close the socket.
+	    		 */
 	    		os.close();
 	    		is.close();
 	    		clientSocket.close();
-	      } 
+	    	} 
 	    	catch (IOException e) 
 	    	{
 	    		System.err.println("IOException:  " + e);
