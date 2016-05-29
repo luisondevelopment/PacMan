@@ -22,13 +22,13 @@ public class Server
 			socket = serverSocket.accept();	
 			for (int i = 0 ; i < 10 ; i ++)
 			{
-				System.out.println("Connection from: " + socket.getInetAddress());
-				out = new DataOutputStream(socket.getOutputStream());
-				in = new DataInputStream (socket.getInputStream());
-				
 				if (user[i] == null)
 				{
-					user[i] = new Users(out,in,user);
+				System.out.println("Connection from: " + socket.getInetAddress());
+				DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+				DataInputStream in = new DataInputStream (socket.getInputStream());
+								
+					user[i] = new Users(out,in,user,i);
 					Thread thread = new Thread(user[i]);
 					thread.start();
 					break;
@@ -46,12 +46,17 @@ class Users implements Runnable
 	DataInputStream in;
 	Users[] user = new Users[10];
 	String name;
+	int playerid;
+	int playeridin;
+	int xin;
+	int yin;
 	
-	public Users(DataOutputStream out, DataInputStream in, Users[] user)
+	public Users(DataOutputStream out, DataInputStream in, Users[] user,int pid)
 	{
 		this.out = out;
 		this.in = in;	
 		this.user = user;
+		this.playerid = pid;
 	}
 	
 	@Override
@@ -59,31 +64,34 @@ class Users implements Runnable
 	{	
 		try
 		{
-			name = in.readUTF();
+			out.writeInt(playerid);
 		}
 		catch(IOException e)
 		{
-			
+		System.out.println("Failed to send PlayerID");	
 		}
 		
 		while (true)
 		{	
 			try
 			{
-				String message = in.readUTF();
-				
+				playeridin = in.readInt();
+				xin = in.readInt();
+				yin = in.readInt();
+								
 				for (int i = 0 ; i < 10 ; i++)
 				{
 					if (user[i] != null)
 					{
-						user[i].out.writeUTF(name + ": " + message);
+						user[i].out.writeInt(playeridin);
+						user[i].out.writeInt(xin);
+						user[i].out.writeInt(yin);
 					}
 				}
 			}
 			catch(IOException e)
 			{
-				this.out = null;
-				this.in = null;
+				user[playerid] = null;
 				break;
 			}
 			
