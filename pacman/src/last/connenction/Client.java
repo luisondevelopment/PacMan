@@ -49,18 +49,19 @@ public class Client extends Applet implements Runnable,KeyListener
 		}		
 	}
 
-public void updateCoordinates(int pid, int x2, int y2)
-{
-	this.x[pid] = x2;
-	this.y[pid] = y2;
-}
-public void paint(Graphics g)
-{
-	for(int i = 0; i < 10; i++)
+	public void updateCoordinates(int pid, int x2, int y2)
 	{
-		g.drawOval(x[i], y[i], 5, 5);
+		this.x[pid] = x2;
+		this.y[pid] = y2;
 	}
-}
+	
+	public void paint(Graphics g)
+	{
+		for(int i = 0; i < 10; i++)
+		{
+			g.drawOval(x[i], y[i], 5, 5);
+		}
+	}
 
 @Override
 public void run()
@@ -111,53 +112,52 @@ public void run()
 }
 
 @Override
-public void keyTyped(KeyEvent e) 
-{
+	public void keyTyped(KeyEvent e) 
+	{
 		
-}
+	}
 
 @Override
-public void keyPressed(KeyEvent e) 
-{
-	if(e.getKeyCode() == 37)
+	public void keyPressed(KeyEvent e) 
 	{
-		left = true;
+		if(e.getKeyCode() == 37)
+		{
+			left = true;
+		}
+		if(e.getKeyCode() == 38)
+		{
+			up = true;
+		}
+		if(e.getKeyCode() == 39)
+		{
+			right = true;
+		}
+		if(e.getKeyCode() == 40)
+		{
+			down = true;
+		}
 	}
-	if(e.getKeyCode() == 38)
-	{
-		up = true;
-	}
-	if(e.getKeyCode() == 39)
-	{
-		right = true;
-	}
-	if(e.getKeyCode() == 40)
-	{
-		down = true;
-	}
-}
 
 @Override
-public void keyReleased(KeyEvent e) 
-{
-	if(e.getKeyCode() == 37)
+	public void keyReleased(KeyEvent e) 
 	{
-		left = false;
+		if(e.getKeyCode() == 37)
+		{
+			left = false;
+		}
+		if(e.getKeyCode() == 38)
+		{
+			up = false;
+		}
+		if(e.getKeyCode() == 39)
+		{
+			right = false;
+		}
+		if(e.getKeyCode() == 40)
+		{
+			down = false;
+		}
 	}
-	if(e.getKeyCode() == 38)
-	{
-		up = false;
-	}
-	if(e.getKeyCode() == 39)
-	{
-		right = false;
-	}
-	if(e.getKeyCode() == 40)
-	{
-		down = false;
-	}
-}
-
 }
 class Input implements Runnable
 {

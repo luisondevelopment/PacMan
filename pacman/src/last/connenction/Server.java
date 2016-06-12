@@ -68,7 +68,7 @@ class Users implements Runnable
 		}
 		catch(IOException e)
 		{
-		System.out.println("Failed to send PlayerID");	
+			System.out.println("Failed to send PlayerID");	
 		}
 		
 		while (true)
