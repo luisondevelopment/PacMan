@@ -24,16 +24,15 @@ public class Server
 			{
 				if (user[i] == null)
 				{
-				System.out.println("Connection from: " + socket.getInetAddress());
-				DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-				DataInputStream in = new DataInputStream (socket.getInputStream());
+					System.out.println("Connection from: " + socket.getInetAddress());
+					DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+					DataInputStream in = new DataInputStream (socket.getInputStream());
 								
 					user[i] = new Users(out,in,user,i);
 					Thread thread = new Thread(user[i]);
 					thread.start();
 					break;
-				}
-				
+				}		
 			}
 		}
 	}
@@ -46,25 +45,28 @@ class Users implements Runnable
 	DataInputStream in;
 	Users[] user = new Users[10];
 	String name;
-	int playerid;
-	int playeridin;
-	int xin;
-	int yin;
+	int playerId;
+	int playerIdIn;
+	int xIn;
+	int yIn;
+	int qtdPlayers;
 	
 	public Users(DataOutputStream out, DataInputStream in, Users[] user,int pid)
 	{
 		this.out = out;
 		this.in = in;	
 		this.user = user;
-		this.playerid = pid;
+		this.playerId = pid;
 	}
 	
 	@Override
 	public void run() 
 	{	
+		int i = 0, aux = 0;
+		
 		try
 		{
-			out.writeInt(playerid);
+			out.writeInt(playerId);
 		}
 		catch(IOException e)
 		{
@@ -75,23 +77,47 @@ class Users implements Runnable
 		{	
 			try
 			{
-				playeridin = in.readInt();
-				xin = in.readInt();
-				yin = in.readInt();
+				playerIdIn = in.readInt();
+				/*xIn = in.readInt();
+				yIn = in.readInt();*/
+				
+				int xCompare = in.readInt();
+				int yCompare = in.readInt();
+				
+				for (i = 0 ; i < 10 ; i++)
+				{
+					if (user[i] != null && i != playerIdIn)
+					{
+						//VERIFICA SE OS PLAYERS IRÃO ESTAR NO MESMO SQM
+						aux++;
+						if (xCompare != user[i].xIn || yCompare != user[i].yIn)
+						{
+							xIn = xCompare;
+							yIn = yCompare;
+						}	
+					}
+				}
+				
+				if (aux == 0)
+				{
+					xIn = xCompare;
+					yIn = yCompare;
+				}
 								
-				for (int i = 0 ; i < 10 ; i++)
+				for (i = 0 ; i < 10 ; i++)
 				{
 					if (user[i] != null)
 					{
-						user[i].out.writeInt(playeridin);
-						user[i].out.writeInt(xin);
-						user[i].out.writeInt(yin);
+						user[i].out.writeInt(playerIdIn);
+						user[i].out.writeInt(xIn);
+						user[i].out.writeInt(yIn);
+						user[i].out.writeInt(aux + 1);
 					}
 				}
 			}
 			catch(IOException e)
 			{
-				user[playerid] = null;
+				user[playerId] = null;
 				break;
 			}
 			
