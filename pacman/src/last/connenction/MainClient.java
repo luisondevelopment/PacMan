@@ -9,14 +9,13 @@ public class MainClient {
 		Client cl = new Client();
 
 		JFrame janela = new JFrame("PacMan - Player" );
-		janela.setSize(340, 360);
+		janela.setSize(1000, 730);
 		janela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		janela.add(cl);
 		janela.addKeyListener(cl);
 		
 		janela.setVisible(true);
 		cl.init();
-
 	}
 
 }
