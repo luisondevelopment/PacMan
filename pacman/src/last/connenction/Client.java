@@ -1,14 +1,22 @@
 package last.connenction;
 
 import java.net.*;
+import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
 import java.io.*;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
 
 public class Client extends JPanel implements Runnable, KeyListener {
 	
@@ -23,11 +31,29 @@ public class Client extends JPanel implements Runnable, KeyListener {
 	int playery;
 	int qtdPlayers;
 	int playerSpeed = 160;
+	int playerSize = 25;
 	int screenHeight = 680;
 	int screenWidth = 950;
 	int sqm = 20;
 	int pontos = 0;
 	int qtdPontos = 0;
+	BufferedImage down1, down2, down3;
+	BufferedImage left1, left2, left3;
+	BufferedImage right1, right2, right3;
+	BufferedImage up1, up2, up3;
+	BufferedImage imgPacFechado = null;
+	BufferedImage imgPacMaisAberto = null;
+	BufferedImage imgPacAberto = null;
+	BufferedImage imagem = null;
+	BufferedImage imgEat = null;
+	BufferedImage background = null;
+	int contador = 0;
+	int ajuste = 0;
+	private final Font smallfont = new Font("Helvetica", Font.BOLD, 14);
+	private final Font fonteVencedor = new Font("Helvetica", Font.BOLD, 30);
+	private final Color dotcolor = new Color(192, 192, 0);
+
+	
 	public short screenData[][] = { //		  5             10             15             20 			  25            30              35
 								{ 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 								{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -85,6 +111,8 @@ public class Client extends JPanel implements Runnable, KeyListener {
 	{
 		try 
 		{
+			carregaImagens();
+			
 			System.out.println("Connencting...");
 			socket = new Socket("localhost", 4444);
 			System.out.println("Connection successful...");
@@ -112,7 +140,33 @@ public class Client extends JPanel implements Runnable, KeyListener {
 			System.out.println("Cliente com problema");
 		}
 	}
-
+	
+	public void carregaImagens()
+	{
+		try 
+		{
+			background = ImageIO.read(new File("../pacman/src/images/background.png"));
+			down1 = ImageIO.read(new File("../pacman/src/images/down1.gif"));
+			down2 = ImageIO.read(new File("../pacman/src/images/down2.gif"));
+			down3 = ImageIO.read(new File("../pacman/src/images/down3.gif"));
+			up1 = ImageIO.read(new File("../pacman/src/images/up1.gif"));
+			up2 = ImageIO.read(new File("../pacman/src/images/up2.gif"));
+			up3 = ImageIO.read(new File("../pacman/src/images/up3.gif"));
+			left1 = ImageIO.read(new File("../pacman/src/images/left1.gif"));
+			left2 = ImageIO.read(new File("../pacman/src/images/left2.gif"));
+			left3 = ImageIO.read(new File("../pacman/src/images/left3.gif"));
+			right1 =  ImageIO.read(new File("../pacman/src/images/right1.gif"));
+			right2 =  ImageIO.read(new File("../pacman/src/images/right2.gif"));
+			right3 =  ImageIO.read(new File("../pacman/src/images/right3.gif"));
+		} 
+		catch (IOException e) 
+		{
+			e.printStackTrace();
+			System.out.println("Problema ao carregar as imagens");
+		}
+		
+	}
+	
 	public void updateCoordinates(int pid, int x2, int y2, int qtdPlayers) 
 	{
 		this.x[pid] = x2 * sqm;
@@ -123,26 +177,45 @@ public class Client extends JPanel implements Runnable, KeyListener {
 	public void paint(Graphics g) 
 	{
 		super.paint(g);
-		int x1,x2,y1,y2;
-		g.drawOval(x[playerid], y[playerid], sqm, sqm);
 		
+		Font fonte = new Font("Helvetica", Font.BOLD, 15);
+		g.setFont(fonte);
+		
+		g.drawImage(background, 0, 0,1000,1000,this);
+		g.drawImage(imagem, x[playerid] - ajuste, y[playerid] - ajuste,playerSize ,playerSize,this);
+		
+		g.setColor(new Color(96, 128, 255));
 		g.drawString("Player " + (playerid + 1) + "   Pontos:" + pontos + "/" + qtdPontos, 90, 10);
+		g.setColor(Color.BLACK);
 		
 		if (pontos == qtdPontos && pontos > 0)
 			g.drawString("Player: " + (playerid + 1) +" ganhou!!", 110, 400);
 		
 		for (int k = 0; k < 10; k++) 
 		{
-			if((y[k] < playery + 4 && y[k] > playery -4) && (x[k] < playerx + 4 && x[k] > playerx - 4))
-				g.drawOval(x[k], y[k], sqm, sqm);
+			if((x[k] < x[playerid] + 80 && x[k] > x[playerid] - 80) && (y[playerid] < y[playerid] + 80 && y[k] > playerx - 80))
+			{
+				if(k != playerid)
+					g.drawImage(imagem, x[k], y[k],25 ,25 ,this);
+			}
+			if(pontos == qtdPontos)
+			{
+				g.setFont(fonteVencedor);
+				g.setColor(Color.BLUE);
+				g.drawString("Player " + (playerid + 1) + " é o vencedor!!" , 200, 200);
+			}
 		}
 		
 		for(int i = 0 ; i < 49 ; i++)
 		{
+			g.setColor(Color.WHITE);
 			for (int j = 0; j < 34 ; j++)
 			{	
 				if ((j < playery + 4 && j > playery - 4) && (i < playerx + 4 && i > playerx - 4))
 				{	
+					Graphics2D g2 = (Graphics2D) g;
+					g2.setStroke(new BasicStroke(1));
+					
 					if(screenData[i][j] == 10)
 					{
 						int offsetX = (i * sqm) + 8;
@@ -170,6 +243,10 @@ public class Client extends JPanel implements Runnable, KeyListener {
 						g.setColor(Color.BLUE);
 						g.drawOval(offsetX, offsetY, 7, 7);
 						g.setColor(Color.BLACK);
+						g.drawImage(imgEat, offsetX, offsetY,10 ,10 ,this);
+						
+			            g2.setColor(dotcolor);
+			            g2.fillRect(offsetX, offsetY, 7, 7);
 					}
 				}
 			}
@@ -187,6 +264,8 @@ public class Client extends JPanel implements Runnable, KeyListener {
 			
 			if (screenData[playerx][playery] == 9)
 			{
+				playerSize += 4;
+				ajuste += 2;
 				playerSpeed -= 10;
 				screenData[playerx][playery] = 0;
 				pontos++;
@@ -197,6 +276,16 @@ public class Client extends JPanel implements Runnable, KeyListener {
 				if (screenData[playerx + 1][playery] < 20)
 				{
 					playerx += 1;
+					
+					contador++;
+					if(contador > 15)
+						contador = 0;
+					if(contador >= 0 && contador < 5)
+						imagem = right1;
+					if(contador >= 5 && contador < 10)
+						imagem = right2;
+					if(contador <= 15 && contador >=10)
+						imagem = right3;
 				}
 			}
 			if (left == true && (playerx * sqm) > (screenWidth * (-1)) && playerx > 0) 
@@ -204,6 +293,16 @@ public class Client extends JPanel implements Runnable, KeyListener {
 				if (screenData[playerx - 1][playery] < 20)
 				{
 					playerx -= 1;
+					
+					contador++;
+					if(contador > 15)
+						contador = 0;
+					if(contador >= 0 && contador < 5)
+						imagem = left1;
+					if(contador >= 5 && contador < 10)
+						imagem = left2;
+					if(contador <= 15 && contador >=10)
+						imagem = left3;
 				}
 			}
 			if (down == true && (playery * sqm)< screenHeight) 
@@ -211,6 +310,16 @@ public class Client extends JPanel implements Runnable, KeyListener {
 				if (screenData[playerx][playery + 1] < 20)
 				{
 					playery += 1;
+					
+					contador++;
+					if(contador > 15)
+						contador = 0;
+					if(contador >= 0 && contador < 5)
+						imagem = down1;
+					if(contador >= 5 && contador < 10)
+						imagem = down2;
+					if(contador <= 15 && contador >=10)
+						imagem = down3;
 				}
 			}
 			if (up == true && (playery * sqm) > 0) 
@@ -218,6 +327,16 @@ public class Client extends JPanel implements Runnable, KeyListener {
 				if (screenData[playerx][playery - 1] < 20)
 				{
 					playery -= 1;
+					
+					contador++;
+					if(contador > 15)
+						contador = 0;
+					if(contador >= 0 && contador < 5)
+						imagem = up1;
+					if(contador >= 5 && contador < 10)
+						imagem = up2;
+					if(contador <= 15 && contador >=10)
+						imagem = up3;
 				}
 			}
 			if (right || left || up || down) 
@@ -248,9 +367,7 @@ public class Client extends JPanel implements Runnable, KeyListener {
 	}
 
 	@Override
-	public void keyTyped(KeyEvent e) {
-
-	}
+	public void keyTyped(KeyEvent e) {}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
@@ -284,7 +401,6 @@ public class Client extends JPanel implements Runnable, KeyListener {
 			down = false;
 		}
 	}
-
 }
 
 class Input implements Runnable 
